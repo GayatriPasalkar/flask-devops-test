@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        // Set JAVA_HOME and PATH globally
+        // Ensure Java 21 is available everywhere in the pipeline
         JAVA_HOME = "/opt/java/openjdk"
-        PATH = "${JAVA_HOME}/bin:${PATH}"
+        PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
     }
 
     stages {
@@ -34,7 +34,12 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('MySonarQubeServer') {
-                    sh 'sonar-scanner'
+                    sh '''
+                        echo "Using Java from: $JAVA_HOME"
+                        which java
+                        java -version
+                        sonar-scanner
+                    '''
                 }
             }
         }
