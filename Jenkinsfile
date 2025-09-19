@@ -27,7 +27,9 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh './venv/bin/pytest test_app.py'
+                sh '''
+                    ./venv/bin/pytest --cov=. --cov-report=xml test_app.py
+                '''
             }
         }
 
